@@ -1,1 +1,29 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title> Pac man </title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div id="welcome">
+    <h1>🎮 Bem-vindo ao Pac Man 🎮</h1>
+    <div id="menu">
+      <button id="start-btn">Iniciar Jogo</button>
+      <button id="mute-btn">🔇 Som</button>
+    </div>
+  </div>
+
+  <div id="game-area" style="display: none;">
+    <p id="score">Pontuação: 0 | Nível: 1</p>
+    <div id="game-board"></div>
+  </div>
+
+  <audio id="bg-music" src="assets/action-theme.mp3" loop></audio>
+  <audio id="gameover-music" src="assets/gameover-theme.mp3"></audio>
+
+  <script src="script.js"></script>
+</body>
+</html>
 
