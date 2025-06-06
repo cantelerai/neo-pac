@@ -1,5 +1,7 @@
 const board = document.getElementById("game-board");
 const scoreText = document.getElementById("score");
+const bgMusic = document.getElementById("bg-music");
+
 let score = 0;
 const size = 10;
 let playerPos = 0;
@@ -39,9 +41,11 @@ document.addEventListener("keydown", e => {
     case "ArrowRight":
       if ((playerPos + 1) % size !== 0) playerPos += 1;
       break;
+    case "m": // botão para mutar/desmutar música
+      bgMusic.paused ? bgMusic.play() : bgMusic.pause();
+      break;
   }
   updatePlayer();
 });
 
 createBoard();
-
