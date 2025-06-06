@@ -7,25 +7,20 @@ body {
   padding: 0;
 }
 
-h1 {
-  font-size: 3rem;
-  margin-top: 20px;
-}
-
 #game-board {
   display: grid;
-  grid-template-columns: repeat(10, 60px); /* Aumentado */
-  grid-template-rows: repeat(10, 60px);    /* Aumentado */
-  gap: 4px;
+  grid-template-columns: repeat(10, 40px);
+  grid-template-rows: repeat(10, 40px);
+  gap: 2px;
   justify-content: center;
-  margin: 40px auto;
+  margin: 20px auto;
 }
 
 .cell {
-  width: 60px;    /* Aumentado */
-  height: 60px;   /* Aumentado */
+  width: 40px;
+  height: 40px;
   background-color: #222;
-  border-radius: 6px;
+  border-radius: 4px;
 }
 
 .player {
@@ -46,9 +41,9 @@ h1 {
 }
 
 button {
-  font-size: 20px;
-  padding: 12px 24px;
-  margin: 10px;
+  font-size: 16px;
+  padding: 10px 20px;
+  margin: 5px;
   border: none;
   border-radius: 8px;
   background-color: #6c5ce7;
@@ -58,8 +53,4 @@ button {
 
 button:hover {
   background-color: #341f97;
-}
-
-#score {
-  font-size: 1.5rem;
 }
