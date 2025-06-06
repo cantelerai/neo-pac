@@ -35,3 +35,22 @@ body {
 .ghost {
   background-color: red;
 }
+
+#menu {
+  margin-top: 20px;
+}
+
+button {
+  font-size: 16px;
+  padding: 10px 20px;
+  margin: 5px;
+  border: none;
+  border-radius: 8px;
+  background-color: #6c5ce7;
+  color: white;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #341f97;
+}

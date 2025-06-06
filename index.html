@@ -7,12 +7,18 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <h1>Pac Man</h1>
-  <div id="game-board"></div>
-  <p id="score">Pontuação: 0 | Nível: 1</p>
+  <h1>Neo Pac</h1>
 
-  <!-- Música de fundo -->
-  <audio id="bg-music" src="assets/8bit Dungeon Boss.mp3" autoplay loop></audio>
+  <div id="menu">
+    <button id="start-btn">Iniciar Jogo</button>
+    <button id="mute-btn">🔇 Som</button>
+  </div>
+
+  <div id="game-board" style="display: none;"></div>
+  <p id="score" style="display: none;">Pontuação: 0 | Nível: 1</p>
+
+  <audio id="bg-music" src="assets/8bit Dungeon Boss.mp3" loop></audio>
+  <audio id="gameover-music" src="assets/pixel-game-over-319170.mp3"></audio>
 
   <script src="script.js"></script>
 </body>

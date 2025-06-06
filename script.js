@@ -1,6 +1,10 @@
 const board = document.getElementById("game-board");
 const scoreText = document.getElementById("score");
+const startBtn = document.getElementById("start-btn");
+const muteBtn = document.getElementById("mute-btn");
+const menu = document.getElementById("menu");
 const bgMusic = document.getElementById("bg-music");
+const gameOverMusic = document.getElementById("gameover-music");
 
 const size = 10;
 let score = 0;
@@ -8,6 +12,28 @@ let level = 1;
 let playerPos = 0;
 let ghostPos = size * size - 1;
 let ghostInterval;
+let isMuted = true;
+
+startBtn.addEventListener("click", () => {
+  menu.style.display = "none";
+  board.style.display = "grid";
+  scoreText.style.display = "block";
+
+  if (!isMuted) bgMusic.play();
+  createBoard();
+});
+
+muteBtn.addEventListener("click", () => {
+  isMuted = !isMuted;
+  muteBtn.textContent = isMuted ? "🔇 Som" : "🔊 Som";
+
+  if (isMuted) {
+    bgMusic.pause();
+    gameOverMusic.pause();
+  } else {
+    bgMusic.play();
+  }
+});
 
 function createBoard() {
   board.innerHTML = "";
@@ -41,7 +67,6 @@ function updatePlayer() {
     gameOver();
   }
 
-  // Verifica vitória de nível
   if (document.querySelectorAll(".food").length === 0) {
     alert("Você venceu o nível " + level + "!");
     level++;
@@ -92,8 +117,12 @@ function resetBoard() {
 
 function gameOver() {
   clearInterval(ghostInterval);
-  alert("Game Over! O fantasma pegou você!");
-  window.location.reload();
+  bgMusic.pause();
+  if (!isMuted) gameOverMusic.play();
+  setTimeout(() => {
+    alert("Game Over! O fantasma pegou você!");
+    window.location.reload();
+  }, 100);
 }
 
 document.addEventListener("keydown", e => {
@@ -110,11 +139,7 @@ document.addEventListener("keydown", e => {
     case "ArrowRight":
       if ((playerPos + 1) % size !== 0) playerPos += 1;
       break;
-    case "m":
-      bgMusic.paused ? bgMusic.play() : bgMusic.pause();
-      break;
   }
   updatePlayer();
 });
 
-createBoard();
