@@ -5,16 +5,58 @@ body {
   text-align: center;
   margin: 0;
   padding: 0;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
-h1 {
+#welcome {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+#welcome h1 {
   font-size: 3rem;
+  margin-bottom: 40px;
+}
+
+#menu {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+button {
+  font-size: 24px;
+  padding: 16px 32px;
+  border: none;
+  border-radius: 12px;
+  background-color: #6c5ce7;
+  color: white;
+  cursor: pointer;
+  width: 260px;
+}
+
+button:hover {
+  background-color: #341f97;
+}
+
+#game-area {
+  text-align: center;
+}
+
+#score {
+  font-size: 1.5rem;
   margin-top: 20px;
 }
 
 #game-board {
   display: grid;
-  grid-template-columns: repeat(8, 50px); /* tabuleiro 8x8 menor */
+  grid-template-columns: repeat(8, 50px);
   grid-template-rows: repeat(8, 50px);
   gap: 4px;
   justify-content: center;
@@ -56,30 +98,3 @@ h1 {
   height: 100%;
 }
 
-#menu {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-top: 40px;
-  gap: 20px;
-}
-
-button {
-  font-size: 24px;
-  padding: 16px 32px;
-  border: none;
-  border-radius: 12px;
-  background-color: #6c5ce7;
-  color: white;
-  cursor: pointer;
-  width: 250px;
-}
-
-button:hover {
-  background-color: #341f97;
-}
-
-#score {
-  font-size: 1.5rem;
-  margin-top: 10px;
-}
