@@ -6,7 +6,8 @@ const menu = document.getElementById("menu");
 const bgMusic = document.getElementById("bg-music");
 const gameOverMusic = document.getElementById("gameover-music");
 
-const size = 10;
+const size = 8;
+
 let score = 0;
 let level = 1;
 let playerPos = 0;

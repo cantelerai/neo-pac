@@ -14,16 +14,16 @@ h1 {
 
 #game-board {
   display: grid;
-  grid-template-columns: repeat(10, 60px);
-  grid-template-rows: repeat(10, 60px);
+  grid-template-columns: repeat(8, 50px); /* tabuleiro 8x8 menor */
+  grid-template-rows: repeat(8, 50px);
   gap: 4px;
   justify-content: center;
-  margin: 40px auto;
+  margin: 30px auto;
 }
 
 .cell {
-  width: 60px;
-  height: 60px;
+  width: 50px;
+  height: 50px;
   background-color: #222;
   border-radius: 6px;
   display: flex;
@@ -33,7 +33,7 @@ h1 {
 
 .player {
   background-color: transparent;
-  background-image: url("assets/pngwing.com.png");
+  background-image: url("assets/5a18871c8d421802430d2d05.png");
   background-size: cover;
   background-position: center;
   width: 100%;
@@ -49,7 +49,7 @@ h1 {
 
 .ghost {
   background-color: transparent;
-  background-image: url("assets/5a18871c8d421802430d2d05.png");
+  background-image: url("assets/pngwing.com.png");
   background-size: cover;
   background-position: center;
   width: 100%;
@@ -57,18 +57,22 @@ h1 {
 }
 
 #menu {
-  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 40px;
+  gap: 20px;
 }
 
 button {
-  font-size: 20px;
-  padding: 12px 24px;
-  margin: 10px;
+  font-size: 24px;
+  padding: 16px 32px;
   border: none;
-  border-radius: 8px;
+  border-radius: 12px;
   background-color: #6c5ce7;
   color: white;
   cursor: pointer;
+  width: 250px;
 }
 
 button:hover {
