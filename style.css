@@ -31,3 +31,7 @@ body {
   background-color: #6ef;
   border-radius: 50%;
 }
+
+.ghost {
+  background-color: red;
+}
