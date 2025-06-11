@@ -1,125 +1,38 @@
-let gridSize = 8;
-let playerPos = 0;
-let ghostPos = gridSize * gridSize - 1;
-let cells = [];
-let score = 0;
-let level = "easy";
-let soundEnabled = true;
 let gameStarted = false;
-let timer;
-let timeLeft;
-let playerLives = 1;
-
-const board = document.getElementById("game-board");
-const bgMusic = new Audio("assets/8bit");
-const deathSound = new Audio("assets/");
-bgMusic.loop = true;
+let music = document.getElementById("background-music");
+let deathSound = document.getElementById("death-sound");
+let isSoundOn = true;
 
 function toggleSound() {
-  soundEnabled = !soundEnabled;
-  if (!soundEnabled) {
-    bgMusic.pause();
+  isSoundOn = !isSoundOn;
+  if (isSoundOn) {
+    music.play();
+    document.getElementById("sound-button").innerText = "🔊 Som";
   } else {
-    bgMusic.play();
+    music.pause();
+    document.getElementById("sound-button").innerText = "🔇 Som";
   }
-  alert(`Som ${soundEnabled ? "ativado" : "desativado"}`);
 }
 
 function startGame() {
-  document.getElementById("menu").style.display = "none";
+  document.getElementById("start-screen").style.display = "none";
   document.getElementById("game-container").style.display = "block";
-
-  level = document.getElementById("level").value;
-  if (level === "easy") timeLeft = 60;
-  else if (level === "medium") timeLeft = 40;
-  else timeLeft = 25;
-
-  document.getElementById("timer").innerText = `Tempo: ${timeLeft}s`;
-  startTimer();
-  generateMap();
-  drawCharacters();
-  gameStarted = true;
-
-  if (soundEnabled) bgMusic.play();
-  document.addEventListener("keydown", movePlayer);
+  if (isSoundOn) music.play();
+  initGame();
 }
 
-function startTimer() {
-  timer = setInterval(() => {
-    timeLeft--;
-    document.getElementById("timer").innerText = `Tempo: ${timeLeft}s`;
-    if (timeLeft <= 0) {
-      clearInterval(timer);
-      if (soundEnabled) deathSound.play();
-      alert("Tempo esgotado! Fim de jogo!");
-      location.reload();
-    }
-  }, 1000);
+function gameOver() {
+  if (isSoundOn) deathSound.play();
+  // outras ações de game over
 }
 
-function generateMap() {
-  board.innerHTML = "";
-  board.style.gridTemplateColumns = `repeat(${gridSize}, 1fr)`;
-  cells = [];
+function initGame() {
+  const canvas = document.getElementById("gameCanvas");
+  const ctx = canvas.getContext("2d");
 
-  for (let i = 0; i < gridSize * gridSize; i++) {
-    const cell = document.createElement("div");
-    cell.classList.add("cell");
-
-    if (Math.random() < 0.1) {
-      cell.classList.add("super-dot");
-    } else {
-      cell.classList.add("food");
-    }
-
-    board.appendChild(cell);
-    cells.push(cell);
-  }
-
-  playerPos = 0;
-  ghostPos = gridSize * gridSize - 1;
+  ctx.fillStyle = "yellow";
+  ctx.beginPath();
+  ctx.arc(50, 50, 20, 0.2 * Math.PI, 1.8 * Math.PI); // Pac-Man
+  ctx.lineTo(50, 50);
+  ctx.fill();
 }
-
-function drawCharacters() {
-  updatePlayer();
-  updateGhost();
-}
-
-function updatePlayer() {
-  cells.forEach(cell => {
-    cell.classList.remove("player");
-    cell.style.backgroundImage = "none";
-  });
-
-  cells[playerPos].classList.add("player");
-
-  const cell = cells[playerPos];
-  if (cell.classList.contains("food")) {
-    cell.classList.remove("food");
-    score++;
-  }
-  if (cell.classList.contains("super-dot")) {
-    cell.classList.remove("super-dot");
-    playerLives++;
-    console.log("Ganhou uma vida! Vidas:", playerLives);
-  }
-}
-
-function updateGhost() {
-  cells.forEach(cell => cell.classList.remove("ghost"));
-  cells[ghostPos].classList.add("ghost");
-}
-
-function movePlayer(e) {
-  if (!gameStarted) return;
-  let newPos = playerPos;
-
-  if (e.key === "ArrowRight" && playerPos % gridSize < gridSize - 1) newPos++;
-  if (e.key === "ArrowLeft" && playerPos % gridSize > 0) newPos--;
-  if (e.key === "ArrowUp" && playerPos >= gridSize) newPos -= gridSize;
-  if (e.key === "ArrowDown" && playerPos + gridSize < gridSize * gridSize) newPos += gridSize;
-
-  playerPos = newPos;
-  updatePlayer();
-}
-

@@ -2,27 +2,29 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Pac-Man</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Cantelerai - Pac-Man</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div id="menu">
-    <h1>🎮 Pac-Man 🎮</h1>
-    <select id="level">
-      <option value="easy">Fácil</option>
-      <option value="medium">Médio</option>
-      <option value="hard">Difícil</option>
-    </select>
-    <br><br>
-   <button onclick="startGame()">▶️ Começar Jogo</button>
-   <button onclick="toggleSound()">🔊 Som</button>
+  <div id="start-screen">
+    <h1>🎮 Cantelerai - Pac-Man</h1>
+    <button id="sound-button" class="big-button" onclick="toggleSound()">🔊 Som</button><br/>
+    <button class="big-button" onclick="startGame()">▶️ Começar Jogo</button>
   </div>
 
-  <div id="game-container" style="display: none">
-    <div id="timer"></div>
-    <div id="game-board"></div>
+  <div id="game-container" style="display: none;">
+    <canvas id="gameCanvas" width="400" height="400"></canvas>
   </div>
+
+  <audio id="background-music" loop>
+    <source src="8bit Dungeon Boss.mp3" type="audio/mpeg" />
+    Seu navegador não suporta áudio.
+  </audio>
+
+  <audio id="death-sound">
+    <source src="death.mp3" type="audio/mpeg" />
+  </audio>
 
   <script src="script.js"></script>
 </body>

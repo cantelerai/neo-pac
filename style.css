@@ -1,66 +1,40 @@
 body {
   margin: 0;
-  font-family: sans-serif;
-  background-color: #000;
-  color: #fff;
+  font-family: Arial, sans-serif;
+  background-color: #0a0826;
+  color: white;
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh;
   flex-direction: column;
+}
+
+#start-screen {
   text-align: center;
 }
 
-#menu {
-  margin-bottom: 20px;
+.big-button {
+  background-color: #6c63ff;
+  border: none;
+  padding: 15px 30px;
+  margin: 10px;
+  font-size: 20px;
+  color: white;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.big-button:hover {
+  background-color: #574fd6;
+}
+
+canvas {
+  border: 2px solid white;
+  background-color: black;
 }
 
 #game-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-#game-board {
-  display: grid;
-  grid-template-columns: repeat(8, 1fr);
-  gap: 2px;
-  width: 320px;
-  height: 320px;
-  background-color: #111;
-  border: 2px solid #fff;
-}
-
-.cell {
-  width: 100%;
-  aspect-ratio: 1;
-  background-color: #222;
-}
-
-.food {
-  background-color: white;
-  border-radius: 50%;
-  width: 50%;
-  height: 50%;
-  margin: auto;
-}
-
-.super-dot {
-  background-color: gold;
-  border-radius: 50%;
-  width: 60%;
-  height: 60%;
-  margin: auto;
-}
-
-.player {
-  background-image: url("assets/5a18871c8d421802430d2d05.png");
-  background-size: cover;
-  background-position: center;
-}
-
-.ghost {
-  background-image: url('assets/pngwing.com.png');
-  background-size: cover;
-  background-position: center;
+  text-align: center;
 }
