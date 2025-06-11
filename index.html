@@ -2,30 +2,28 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Cantelerai - Pac-Man</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Neo Pac</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div id="start-screen">
-    <h1>🎮 Cantelerai - Pac-Man</h1>
-    <button id="sound-button" class="big-button" onclick="toggleSound()">🔊 Som</button><br/>
-    <button class="big-button" onclick="startGame()">▶️ Começar Jogo</button>
+  <h1>Neo Pac</h1>
+
+  <!-- Tela inicial -->
+  <div id="menu">
+    <button id="start-btn">Iniciar Jogo</button>
+    <button id="mute-btn">🔇 Som</button>
   </div>
 
-  <div id="game-container" style="display: none;">
-    <canvas id="gameCanvas" width="400" height="400"></canvas>
-  </div>
+  <!-- Tabuleiro -->
+  <div id="game-board" style="display: none;"></div>
+  <p id="score" style="display: none;">Pontuação: 0 | Nível: 1</p>
 
-  <audio id="background-music" loop>
-    <source src="assets/8bit Dungeon Boss.mp3" type="audio/mpeg" />
-    Seu navegador não suporta áudio.
-  </audio>
-
-  <audio id="death-sound">
-    <source src="assets/pixel-game-over-319170.mp3" type="audio/mpeg" />
-  </audio>
+  <!-- Áudios -->
+  <audio id="bg-music" src="assets/action-theme.mp3" loop></audio>
+  <audio id="gameover-music" src="assets/gameover-theme.mp3"></audio>
 
   <script src="script.js"></script>
 </body>
 </html>
+
