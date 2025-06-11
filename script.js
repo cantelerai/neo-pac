@@ -1,144 +1,124 @@
-const board = document.getElementById("game-board");
-const scoreText = document.getElementById("score");
-const startBtn = document.getElementById("start-btn");
-const muteBtn = document.getElementById("mute-btn");
-const menu = document.getElementById("menu");
-const bgMusic = document.getElementById("bg-music");
-const gameOverMusic = document.getElementById("gameover-music");
-
-const size = 10;
-let score = 0;
-let level = 1;
+let gridSize = 8;
 let playerPos = 0;
-let ghostPos = size * size - 1;
-let ghostInterval;
-let isMuted = true;
+let ghostPos = gridSize * gridSize - 1;
+let cells = [];
+let score = 0;
+let level = "easy";
+let soundEnabled = true;
+let gameStarted = false;
+let timer;
+let timeLeft;
+let playerLives = 1;
 
-startBtn.addEventListener("click", () => {
-  menu.style.display = "none";
-  board.style.display = "grid";
-  scoreText.style.display = "block";
+const board = document.getElementById("game-board");
+const bgMusic = new Audio("assets/8bit");
+const deathSound = new Audio("assets/");
+bgMusic.loop = true;
 
-  if (!isMuted) bgMusic.play();
-  createBoard();
-});
-
-muteBtn.addEventListener("click", () => {
-  isMuted = !isMuted;
-  muteBtn.textContent = isMuted ? "🔇 Som" : "🔊 Som";
-
-  if (isMuted) {
+function toggleSound() {
+  soundEnabled = !soundEnabled;
+  if (!soundEnabled) {
     bgMusic.pause();
-    gameOverMusic.pause();
   } else {
     bgMusic.play();
   }
-});
+  alert(`Som ${soundEnabled ? "ativado" : "desativado"}`);
+}
 
-function createBoard() {
+function startGame() {
+  document.getElementById("menu").style.display = "none";
+  document.getElementById("game-container").style.display = "block";
+
+  level = document.getElementById("level").value;
+  if (level === "easy") timeLeft = 60;
+  else if (level === "medium") timeLeft = 40;
+  else timeLeft = 25;
+
+  document.getElementById("timer").innerText = `Tempo: ${timeLeft}s`;
+  startTimer();
+  generateMap();
+  drawCharacters();
+  gameStarted = true;
+
+  if (soundEnabled) bgMusic.play();
+  document.addEventListener("keydown", movePlayer);
+}
+
+function startTimer() {
+  timer = setInterval(() => {
+    timeLeft--;
+    document.getElementById("timer").innerText = `Tempo: ${timeLeft}s`;
+    if (timeLeft <= 0) {
+      clearInterval(timer);
+      if (soundEnabled) deathSound.play();
+      alert("Tempo esgotado! Fim de jogo!");
+      location.reload();
+    }
+  }, 1000);
+}
+
+function generateMap() {
   board.innerHTML = "";
-  for (let i = 0; i < size * size; i++) {
+  board.style.gridTemplateColumns = `repeat(${gridSize}, 1fr)`;
+  cells = [];
+
+  for (let i = 0; i < gridSize * gridSize; i++) {
     const cell = document.createElement("div");
     cell.classList.add("cell");
 
-    if (i !== playerPos && i !== ghostPos && Math.random() < 0.3 + level * 0.05) {
+    if (Math.random() < 0.1) {
+      cell.classList.add("super-dot");
+    } else {
       cell.classList.add("food");
     }
 
     board.appendChild(cell);
+    cells.push(cell);
   }
+
+  playerPos = 0;
+  ghostPos = gridSize * gridSize - 1;
+}
+
+function drawCharacters() {
   updatePlayer();
   updateGhost();
-  ghostSpeedUp();
 }
 
 function updatePlayer() {
-  const cells = document.querySelectorAll(".cell");
-  cells.forEach(cell => cell.classList.remove("player"));
+  cells.forEach(cell => {
+    cell.classList.remove("player");
+    cell.style.backgroundImage = "none";
+  });
+
   cells[playerPos].classList.add("player");
 
-  if (cells[playerPos].classList.contains("food")) {
-    cells[playerPos].classList.remove("food");
+  const cell = cells[playerPos];
+  if (cell.classList.contains("food")) {
+    cell.classList.remove("food");
     score++;
-    updateScore();
   }
-
-  if (playerPos === ghostPos) {
-    gameOver();
-  }
-
-  if (document.querySelectorAll(".food").length === 0) {
-    alert("Você venceu o nível " + level + "!");
-    level++;
-    ghostSpeedUp();
-    resetBoard();
+  if (cell.classList.contains("super-dot")) {
+    cell.classList.remove("super-dot");
+    playerLives++;
+    console.log("Ganhou uma vida! Vidas:", playerLives);
   }
 }
 
 function updateGhost() {
-  const cells = document.querySelectorAll(".cell");
   cells.forEach(cell => cell.classList.remove("ghost"));
   cells[ghostPos].classList.add("ghost");
-
-  if (ghostPos === playerPos) {
-    gameOver();
-  }
 }
 
-function moveGhost() {
-  const directions = [-1, 1, -size, size];
-  const possibleMoves = directions.filter(dir => {
-    const newPos = ghostPos + dir;
-    return newPos >= 0 &&
-      newPos < size * size &&
-      Math.abs((ghostPos % size) - (newPos % size)) <= 1;
-  });
+function movePlayer(e) {
+  if (!gameStarted) return;
+  let newPos = playerPos;
 
-  const move = possibleMoves[Math.floor(Math.random() * possibleMoves.length)];
-  ghostPos += move;
-  updateGhost();
-}
+  if (e.key === "ArrowRight" && playerPos % gridSize < gridSize - 1) newPos++;
+  if (e.key === "ArrowLeft" && playerPos % gridSize > 0) newPos--;
+  if (e.key === "ArrowUp" && playerPos >= gridSize) newPos -= gridSize;
+  if (e.key === "ArrowDown" && playerPos + gridSize < gridSize * gridSize) newPos += gridSize;
 
-function updateScore() {
-  scoreText.textContent = `Pontuação: ${score} | Nível: ${level}`;
-}
-
-function ghostSpeedUp() {
-  clearInterval(ghostInterval);
-  const speed = Math.max(300, 1000 - level * 150);
-  ghostInterval = setInterval(moveGhost, speed);
-}
-
-function resetBoard() {
-  playerPos = 0;
-  ghostPos = size * size - 1;
-  createBoard();
-}
-
-function gameOver() {
-  clearInterval(ghostInterval);
-  bgMusic.pause();
-  if (!isMuted) gameOverMusic.play();
-  setTimeout(() => {
-    alert("Game Over! O fantasma pegou você!");
-    window.location.reload();
-  }, 100);
-}
-
-document.addEventListener("keydown", e => {
-  switch (e.key) {
-    case "ArrowUp":
-      if (playerPos >= size) playerPos -= size;
-      break;
-    case "ArrowDown":
-      if (playerPos < size * (size - 1)) playerPos += size;
-      break;
-    case "ArrowLeft":
-      if (playerPos % size !== 0) playerPos -= 1;
-      break;
-    case "ArrowRight":
-      if ((playerPos + 1) % size !== 0) playerPos += 1;
-      break;
-  }
+  playerPos = newPos;
   updatePlayer();
-});
+}
