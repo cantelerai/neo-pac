@@ -1,73 +1,81 @@
 body {
-  margin: 0;
-  font-family: sans-serif;
-  background-color: #000;
+  font-family: 'Courier New', monospace;
+  background: #0a0a23;
   color: #fff;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  flex-direction: column;
-}
-
-#menu {
   text-align: center;
-  margin-bottom: 20px;
+  margin: 0;
+  padding: 0;
 }
 
-#game-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+h1 {
+  font-size: 3rem;
+  margin-top: 20px;
 }
 
 #game-board {
   display: grid;
-  grid-template-columns: repeat(8, 1fr);
-  gap: 2px;
-  width: 320px;
-  height: 320px;
-  background-color: #111;
-  border: 2px solid #fff;
+  grid-template-columns: repeat(10, 60px);
+  grid-template-rows: repeat(10, 60px);
+  gap: 4px;
+  justify-content: center;
+  margin: 40px auto;
 }
 
 .cell {
-  width: 100%;
-  aspect-ratio: 1;
+  width: 60px;
+  height: 60px;
   background-color: #222;
-}
-
-.food {
-  background-color: white;
-  border-radius: 50%;
-  width: 50%;
-  height: 50%;
-  margin: auto;
-}
-
-.super-dot {
-  background-color: gold;
-  border-radius: 50%;
-  width: 60%;
-  height: 60%;
-  margin: auto;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .player {
+  background-color: transparent;
+  background-image: url("assets/pacman.png");
   background-size: cover;
   background-position: center;
+  width: 100%;
+  height: 100%;
+}
+
+.food {
+  background-color: #6ef;
+  border-radius: 50%;
+  width: 40%;
+  height: 40%;
 }
 
 .ghost {
-  background-color: red;
-  border-radius: 50%;
-  width: 80%;
-  height: 80%;
-  margin: auto;
+  background-color: transparent;
+  background-image: url("assets/ghost.png");
+  background-size: cover;
+  background-position: center;
+  width: 100%;
+  height: 100%;
 }
 
-#timer {
-  color: white;
+#menu {
+  margin-top: 20px;
+}
+
+button {
   font-size: 20px;
-  margin-bottom: 10px;
+  padding: 12px 24px;
+  margin: 10px;
+  border: none;
+  border-radius: 8px;
+  background-color: #6c5ce7;
+  color: white;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #341f97;
+}
+
+#score {
+  font-size: 1.5rem;
+  margin-top: 10px;
 }
