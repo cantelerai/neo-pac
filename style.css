@@ -1,100 +1,73 @@
 body {
-  font-family: 'Courier New', monospace;
-  background: #0a0a23;
-  color: #fff;
-  text-align: center;
   margin: 0;
-  padding: 0;
-  height: 100vh;
+  font-family: sans-serif;
+  background-color: #000;
+  color: #fff;
   display: flex;
-  flex-direction: column;
   justify-content: center;
-}
-
-#welcome {
-  display: flex;
-  flex-direction: column;
   align-items: center;
-  justify-content: center;
-}
-
-#welcome h1 {
-  font-size: 3rem;
-  margin-bottom: 40px;
+  height: 100vh;
+  flex-direction: column;
 }
 
 #menu {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+#game-container {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 20px;
-}
-
-button {
-  font-size: 24px;
-  padding: 16px 32px;
-  border: none;
-  border-radius: 12px;
-  background-color: #6c5ce7;
-  color: white;
-  cursor: pointer;
-  width: 260px;
-}
-
-button:hover {
-  background-color: #341f97;
-}
-
-#game-area {
-  text-align: center;
-}
-
-#score {
-  font-size: 1.5rem;
-  margin-top: 20px;
 }
 
 #game-board {
   display: grid;
-  grid-template-columns: repeat(8, 50px);
-  grid-template-rows: repeat(8, 50px);
-  gap: 4px;
-  justify-content: center;
-  margin: 30px auto;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 2px;
+  width: 320px;
+  height: 320px;
+  background-color: #111;
+  border: 2px solid #fff;
 }
 
 .cell {
-  width: 50px;
-  height: 50px;
-  background-color: #222;
-  border-radius: 6px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.player {
-  background-color: transparent;
-  background-image: url("assets/5a18871c8d421802430d2d05.png");
-  background-size: cover;
-  background-position: center;
   width: 100%;
-  height: 100%;
+  aspect-ratio: 1;
+  background-color: #222;
 }
 
 .food {
-  background-color: #6ef;
+  background-color: white;
   border-radius: 50%;
-  width: 40%;
-  height: 40%;
+  width: 50%;
+  height: 50%;
+  margin: auto;
+}
+
+.super-dot {
+  background-color: gold;
+  border-radius: 50%;
+  width: 60%;
+  height: 60%;
+  margin: auto;
+}
+
+.player {
+  background-size: cover;
+  background-position: center;
 }
 
 .ghost {
-  background-color: transparent;
-  background-image: url("assets/pngwing.com.png");
-  background-size: cover;
-  background-position: center;
-  width: 100%;
-  height: 100%;
+  background-color: red;
+  border-radius: 50%;
+  width: 80%;
+  height: 80%;
+  margin: auto;
 }
 
+#timer {
+  color: white;
+  font-size: 20px;
+  margin-bottom: 10px;
+}

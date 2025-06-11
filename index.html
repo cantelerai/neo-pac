@@ -2,28 +2,27 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title> Pac man </title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cantelerai - Pac-Man</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div id="welcome">
-    <h1>🎮 Bem-vindo ao Pac Man 🎮</h1>
-    <div id="menu">
-      <button id="start-btn">Iniciar Jogo</button>
-      <button id="mute-btn">🔇 Som</button>
-    </div>
+  <div id="menu">
+    <h1>🎮 Cantelerai - Pac-Man</h1>
+    <select id="level">
+      <option value="easy">Fácil</option>
+      <option value="medium">Médio</option>
+      <option value="hard">Difícil</option>
+    </select>
+    <button onclick="toggleSound()">🔊 Som</button>
+    <button onclick="startGame()">Começar Jogo</button>
   </div>
 
-  <div id="game-area" style="display: none;">
-    <p id="score">Pontuação: 0 | Nível: 1</p>
+  <div id="game-container" style="display: none">
+    <div id="timer"></div>
     <div id="game-board"></div>
   </div>
-
-  <audio id="bg-music" src="assets/8bit Dungeon Boss.mp3" loop></audio>
-  <audio id="gameover-music" src="assets/pixel-game-over-319170.mp3"></audio>
 
   <script src="script.js"></script>
 </body>
 </html>
-
