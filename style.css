@@ -33,7 +33,7 @@ h1 {
 
 .player {
   background-color: transparent;
-  background-image: url("assets/pacman.png");
+  background-image: url("assets/5a18871c8d421802430d2d05.png");
   background-size: cover;
   background-position: center;
   width: 100%;
@@ -49,7 +49,7 @@ h1 {
 
 .ghost {
   background-color: transparent;
-  background-image: url("assets/ghost.png");
+  background-image: url("assets/pngwing.com.png");
   background-size: cover;
   background-position: center;
   width: 100%;
