@@ -122,3 +122,6 @@ function movePlayer(e) {
   playerPos = newPos;
   updatePlayer();
 }
+<script src="script.js"></script>
+</body>
+</html>
