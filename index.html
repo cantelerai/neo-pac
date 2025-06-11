@@ -3,19 +3,22 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Neo Pac</title>
+  <title>Pac Man</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <h1>Neo Pac</h1>
-
-  <div id="menu">
-    <button id="start-btn">Iniciar Jogo</button>
-    <button id="mute-btn">🔇 Som</button>
+  <div id="welcome">
+    <h1>🎮 Bem-vindo ao Pac Man 🎮</h1>
+    <div id="menu">
+      <button id="start-btn">Iniciar Jogo</button>
+      <button id="mute-btn">🔇 Som</button>
+    </div>
   </div>
 
-  <div id="game-board" style="display: none;"></div>
-  <p id="score" style="display: none;">Pontuação: 0 | Nível: 1</p>
+  <div id="game-area" style="display: none;">
+    <p id="score">Pontuação: 0 | Nível: 1</p>
+    <div id="game-board"></div>
+  </div>
 
   <audio id="bg-music" src="assets/8bit Dungeon Boss.mp3" loop></audio>
   <audio id="gameover-music" src="assets/pixel-game-over-319170.mp3"></audio>
