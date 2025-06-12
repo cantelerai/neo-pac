@@ -1,95 +1,144 @@
-let gameStarted = false;
-let pacman = document.getElementById("pacman");
-let ghost = document.getElementById("ghost");
-let music = document.getElementById("background-music");
-let deathSound = document.getElementById("death-sound");
-let isSoundOn = true;
-let timer;
-let timeLeft;
-let level = "easy";
+const board = document.getElementById("game-board");
+const scoreText = document.getElementById("score");
+const startBtn = document.getElementById("start-btn");
+const muteBtn = document.getElementById("mute-btn");
+const menu = document.getElementById("menu");
+const bgMusic = document.getElementById("bg-music");
+const gameOverMusic = document.getElementById("gameover-music");
+
+const size = 10;
+let score = 0;
+let level = 1;
 let playerPos = 0;
-let ghostPos = 63;
-let cells = [];
-let playerLives = 1;
+let ghostPos = size * size - 1;
+let ghostInterval;
+let isMuted = true;
 
-const ctx = document.getElementById("gameCanvas").getContext("2d");
+startBtn.addEventListener("click", () => {
+  menu.style.display = "none";
+  board.style.display = "grid";
+  scoreText.style.display = "block";
 
-// Criação do tabuleiro (8x8)
-function generateMap() {
-  const gameBoard = document.getElementById("game-board");
-  gameBoard.innerHTML = '';  // Limpa o tabuleiro antes de gerar
+  if (!isMuted) bgMusic.play();
+  createBoard();
+});
 
-  // Criando as células do tabuleiro
-  for (let i = 0; i < 64; i++) {
+muteBtn.addEventListener("click", () => {
+  isMuted = !isMuted;
+  muteBtn.textContent = isMuted ? "🔇 Som" : "🔊 Som";
+
+  if (isMuted) {
+    bgMusic.pause();
+    gameOverMusic.pause();
+  } else {
+    bgMusic.play();
+  }
+});
+
+function createBoard() {
+  board.innerHTML = "";
+  for (let i = 0; i < size * size; i++) {
     const cell = document.createElement("div");
     cell.classList.add("cell");
-    
-    // Adiciona comida aleatória
-    if (Math.random() < 0.1) {
-      cell.classList.add("super-dot");
-    } else {
+
+    if (i !== playerPos && i !== ghostPos && Math.random() < 0.3 + level * 0.05) {
       cell.classList.add("food");
     }
-    
-    gameBoard.appendChild(cell);
-    cells.push(cell);
+
+    board.appendChild(cell);
   }
-  
   updatePlayer();
   updateGhost();
+  ghostSpeedUp();
 }
 
 function updatePlayer() {
-  // Atualiza a posição do Pac-Man com base no playerPos
-  pacman.style.left = `${(playerPos % 8) * 40}px`;
-  pacman.style.top = `${Math.floor(playerPos / 8) * 40}px`;
+  const cells = document.querySelectorAll(".cell");
+  cells.forEach(cell => cell.classList.remove("player"));
+  cells[playerPos].classList.add("player");
+
+  if (cells[playerPos].classList.contains("food")) {
+    cells[playerPos].classList.remove("food");
+    score++;
+    updateScore();
+  }
+
+  if (playerPos === ghostPos) {
+    gameOver();
+  }
+
+  if (document.querySelectorAll(".food").length === 0) {
+    alert("Você venceu o nível " + level + "!");
+    level++;
+    ghostSpeedUp();
+    resetBoard();
+  }
 }
 
 function updateGhost() {
-  // Atualiza a posição do Fantasma
-  ghost.style.left = `${(ghostPos % 8) * 40}px`;
-  ghost.style.top = `${Math.floor(ghostPos / 8) * 40}px`;
+  const cells = document.querySelectorAll(".cell");
+  cells.forEach(cell => cell.classList.remove("ghost"));
+  cells[ghostPos].classList.add("ghost");
+
+  if (ghostPos === playerPos) {
+    gameOver();
+  }
 }
 
-function movePlayer(e) {
-  if (!gameStarted) return;
+function moveGhost() {
+  const directions = [-1, 1, -size, size];
+  const possibleMoves = directions.filter(dir => {
+    const newPos = ghostPos + dir;
+    return newPos >= 0 &&
+      newPos < size * size &&
+      Math.abs((ghostPos % size) - (newPos % size)) <= 1;
+  });
 
-  if (e.key === "ArrowRight" && playerPos % 8 < 7) playerPos++;
-  if (e.key === "ArrowLeft" && playerPos % 8 > 0) playerPos--;
-  if (e.key === "ArrowUp" && playerPos >= 8) playerPos -= 8;
-  if (e.key === "ArrowDown" && playerPos < 56) playerPos += 8;
+  const move = possibleMoves[Math.floor(Math.random() * possibleMoves.length)];
+  ghostPos += move;
+  updateGhost();
+}
 
+function updateScore() {
+  scoreText.textContent = `Pontuação: ${score} | Nível: ${level}`;
+}
+
+function ghostSpeedUp() {
+  clearInterval(ghostInterval);
+  const speed = Math.max(300, 1000 - level * 150);
+  ghostInterval = setInterval(moveGhost, speed);
+}
+
+function resetBoard() {
+  playerPos = 0;
+  ghostPos = size * size - 1;
+  createBoard();
+}
+
+function gameOver() {
+  clearInterval(ghostInterval);
+  bgMusic.pause();
+  if (!isMuted) gameOverMusic.play();
+  setTimeout(() => {
+    alert("Game Over! O fantasma pegou você!");
+    window.location.reload();
+  }, 100);
+}
+
+document.addEventListener("keydown", e => {
+  switch (e.key) {
+    case "ArrowUp":
+      if (playerPos >= size) playerPos -= size;
+      break;
+    case "ArrowDown":
+      if (playerPos < size * (size - 1)) playerPos += size;
+      break;
+    case "ArrowLeft":
+      if (playerPos % size !== 0) playerPos -= 1;
+      break;
+    case "ArrowRight":
+      if ((playerPos + 1) % size !== 0) playerPos += 1;
+      break;
+  }
   updatePlayer();
-}
-
-function startGame() {
-  document.getElementById("start-screen").style.display = "none";
-  document.getElementById("game-container").style.display = "block";
-
-  level = document.getElementById("difficulty").value;
-  if (level === "easy") timeLeft = 60;
-  else if (level === "medium") timeLeft = 40;
-  else timeLeft = 25;
-
-  document.getElementById("timer").innerText = `Tempo: ${timeLeft}s`;
-  startTimer();
-  generateMap();
-  gameStarted = true;
-
-  if (isSoundOn) music.play();
-  document.addEventListener("keydown", movePlayer);
-}
-
-function startTimer() {
-  timer = setInterval(() => {
-    timeLeft--;
-    document.getElementById("timer").innerText = `Tempo: ${timeLeft}s`;
-    if (timeLeft <= 0) {
-      clearInterval(timer);
-      if (isSoundOn) deathSound.play();
-      alert("Tempo esgotado! Fim de jogo!");
-      location.reload();
-    }
-  }, 1000);
-}
-
+});
