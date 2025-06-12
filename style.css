@@ -1,48 +1,105 @@
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background-color: #0a0826;
-  color: white;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  flex-direction: column;
+let gameStarted = false;
+let pacman = document.getElementById("pacman");
+let ghost = document.getElementById("ghost");
+let music = document.getElementById("background-music");
+let deathSound = document.getElementById("death-sound");
+let isSoundOn = true;
+let timer;
+let timeLeft;
+let level = "easy";
+let playerPos = 0;
+let ghostPos = 63;
+let cells = [];
+let playerLives = 1;
+
+const ctx = document.getElementById("gameCanvas").getContext("2d");
+
+const pacmanImage = new Image();
+pacmanImage.src = 'assets/pacman.png';  // Imagem do Pac-Man
+
+const ghostImage = new Image();
+ghostImage.src = 'assets/ghost.png';  // Imagem do fantasma
+
+function toggleSound() {
+  isSoundOn = !isSoundOn;
+  if (isSoundOn) {
+    music.play();
+    document.getElementById("sound-button").innerText = "🔊 Som";
+  } else {
+    music.pause();
+    document.getElementById("sound-button").innerText = "🔇 Som";
+  }
 }
 
-#start-screen {
-  text-align: center;
+function startGame() {
+  document.getElementById("start-screen").style.display = "none";
+  document.getElementById("game-container").style.display = "block";
+
+  level = document.getElementById("difficulty").value;
+  if (level === "easy") timeLeft = 60;
+  else if (level === "medium") timeLeft = 40;
+  else timeLeft = 25;
+
+  document.getElementById("timer").innerText = `Tempo: ${timeLeft}s`;
+  startTimer();
+  generateMap();
+  gameStarted = true;
+
+  if (isSoundOn) music.play();
+  document.addEventListener("keydown", movePlayer);
 }
 
-.big-button {
-  background-color: #6c63ff;
-  border: none;
-  padding: 15px 30px;
-  margin: 10px;
-  font-size: 20px;
-  color: white;
-  border-radius: 10px;
-  cursor: pointer;
-  transition: background-color 0.3s;
+function startTimer() {
+  timer = setInterval(() => {
+    timeLeft--;
+    document.getElementById("timer").innerText = `Tempo: ${timeLeft}s`;
+    if (timeLeft <= 0) {
+      clearInterval(timer);
+      if (isSoundOn) deathSound.play();
+      alert("Tempo esgotado! Fim de jogo!");
+      location.reload();
+    }
+  }, 1000);
 }
 
-.big-button:hover {
-  background-color: #574fd6;
+function generateMap() {
+  cells = [];
+  for (let i = 0; i < 64; i++) {
+    const cell = document.createElement("div");
+    cell.classList.add("cell");
+    if (Math.random() < 0.1) cell.classList.add("super-dot");
+    else cell.classList.add("food");
+    cells.push(cell);
+  }
+  updatePlayer();
+  updateGhost();
 }
 
-canvas {
-  border: 2px solid white;
-  background-color: black;
+function drawCharacters() {
+  updatePlayer();
+  updateGhost();
 }
 
-#game-container {
-  text-align: center;
-  position: relative;  /* Para permitir o posicionamento absoluto dos elementos */
-  width: 400px;
-  height: 400px;
+function updatePlayer() {
+  ctx.clearRect(0, 0, 400, 400);  // Limpa o canvas a cada atualização
+  
+  // Desenha o Pac-Man usando a imagem carregada
+  ctx.drawImage(pacmanImage, 50, 50, 40, 40); // (x, y, largura, altura)
 }
 
-#pacman, #ghost {
-  position: absolute;
-  transition: all 0.1s ease;  /* Para suavizar o movimento */
+function updateGhost() {
+  // Desenha o Fantasma usando a imagem carregada
+  ctx.drawImage(ghostImage, 350, 350, 40, 40); // (x, y, largura, altura)
+}
+
+function movePlayer(e) {
+  if (!gameStarted) return;
+  let newPos = playerPos;
+
+  if (e.key === "ArrowRight") playerPos++;
+  if (e.key === "ArrowLeft") playerPos--;
+  if (e.key === "ArrowUp") playerPos -= 8;
+  if (e.key === "ArrowDown") playerPos += 8;
+
+  updatePlayer();
 }

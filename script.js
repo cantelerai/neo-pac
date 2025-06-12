@@ -1,107 +1,49 @@
 let gameStarted = false;
+let pacman = document.getElementById("pacman");
+let ghost = document.getElementById("ghost");
 let music = document.getElementById("background-music");
-let deathSound = document.getElementById("death-sound");
-let isSoundOn = true;
-let timer;
-let timeLeft;
-let level = "easy";
-let playerPos = 0;
-let ghostPos = 63;
-let cells = [];
-let playerLives = 1;
 
-const ctx = document.getElementById("gameCanvas").getContext("2d");
+let pacmanPosX = 50;
+let pacmanPosY = 50;
 
-const pacmanImage = new Image();
-pacmanImage.src = 'assets/';  // Imagem do Pac-Man
+let ghostPosX = 350;
+let ghostPosY = 350;
 
-const ghostImage = new Image();
-ghostImage.src = 'assets/ghost.png';  // Imagem do fantasma
-
-function toggleSound() {
-  isSoundOn = !isSoundOn;
-  if (isSoundOn) {
-    music.play();
-    document.getElementById("sound-button").innerText = "🔊 Som";
-  } else {
-    music.pause();
-    document.getElementById("sound-button").innerText = "🔇 Som";
-  }
-}
+let ghostSpeed = 1;  // A velocidade do fantasma
+let moveAmount = 10; // Quantos pixels o Pac-Man se moverá por vez
 
 function startGame() {
   document.getElementById("start-screen").style.display = "none";
   document.getElementById("game-container").style.display = "block";
 
-  level = document.getElementById("difficulty").value;
-  if (level === "easy") timeLeft = 60;
-  else if (level === "medium") timeLeft = 40;
-  else timeLeft = 25;
+  if (music) music.play();
 
-  document.getElementById("timer").innerText = `Tempo: ${timeLeft}s`;
-  startTimer();
-  generateMap();
   gameStarted = true;
-
-  if (isSoundOn) music.play();
   document.addEventListener("keydown", movePlayer);
-}
-
-function startTimer() {
-  timer = setInterval(() => {
-    timeLeft--;
-    document.getElementById("timer").innerText = `Tempo: ${timeLeft}s`;
-    if (timeLeft <= 0) {
-      clearInterval(timer);
-      if (isSoundOn) deathSound.play();
-      alert("Tempo esgotado! Fim de jogo!");
-      location.reload();
-    }
-  }, 1000);
-}
-
-function generateMap() {
-  cells = [];
-  for (let i = 0; i < 64; i++) {
-    const cell = document.createElement("div");
-    cell.classList.add("cell");
-    if (Math.random() < 0.1) cell.classList.add("super-dot");
-    else cell.classList.add("food");
-    cells.push(cell);
-  }
-  updatePlayer();
   updateGhost();
 }
 
-function drawCharacters() {
-  updatePlayer();
-  updateGhost();
-}
+function movePlayer(e) {
+  if (!gameStarted) return;
 
-function updatePlayer() {
-  ctx.clearRect(0, 0, 400, 400);  // Limpa o canvas a cada atualização
-  
-  // Desenha o Pac-Man usando a imagem carregada
-  ctx.drawImage(pacmanImage, 50, 50, 40, 40); // (x, y, largura, altura)
+  if (e.key === "ArrowRight") pacmanPosX += moveAmount;
+  if (e.key === "ArrowLeft") pacmanPosX -= moveAmount;
+  if (e.key === "ArrowUp") pacmanPosY -= moveAmount;
+  if (e.key === "ArrowDown") pacmanPosY += moveAmount;
+
+  pacman.style.left = `${pacmanPosX}px`;
+  pacman.style.top = `${pacmanPosY}px`;
 }
 
 function updateGhost() {
-  // Desenha o Fantasma usando a imagem carregada
-  ctx.drawImage(ghostImage, 350, 350, 40, 40); // (x, y, largura, altura)
-}
+  // A cada 100ms, o fantasma vai se mover em direção ao Pac-Man
+  setInterval(() => {
+    if (ghostPosX < pacmanPosX) ghostPosX += ghostSpeed;
+    if (ghostPosX > pacmanPosX) ghostPosX -= ghostSpeed;
+    if (ghostPosY < pacmanPosY) ghostPosY += ghostSpeed;
+    if (ghostPosY > pacmanPosY) ghostPosY -= ghostSpeed;
 
- function movePlayer(e) {
-  if (!gameStarted) return;
-
-  let pacman = document.getElementById("pacman");
-
-  // Pega a posição atual
-  let pacmanRect = pacman.getBoundingClientRect();
-
-  let moveAmount = 5;  // Quantos pixels o Pac-Man se moverá por vez
-
-  if (e.key === "ArrowRight") pacman.style.left = `${pacmanRect.left + moveAmount}px`;
-  if (e.key === "ArrowLeft") pacman.style.left = `${pacmanRect.left - moveAmount}px`;
-  if (e.key === "ArrowUp") pacman.style.top = `${pacmanRect.top - moveAmount}px`;
-  if (e.key === "ArrowDown") pacman.style.top = `${pacmanRect.top + moveAmount}px`;
+    ghost.style.left = `${ghostPosX}px`;
+    ghost.style.top = `${ghostPosY}px`;
+  }, 100);  // A cada 100ms
 }

@@ -3,38 +3,30 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Pac-Man</title>
+  <title>Cantelerai - Pac-Man</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <div id="start-screen">
-    <h1>🎮 Pac-Man 🎮</h1>
-    <select id="difficulty">
-      <option value="easy">Fácil</option>
-      <option value="medium">Médio</option>
-      <option value="hard">Difícil</option>
-    </select><br/>
-    <button id="sound-button" class="big-button" onclick="toggleSound()">🔊 Som</button>
-    <br>
-    <button class="big-button" onclick="startGame()">▶️ Começar Jogo</button>
+    <h1>🎮 Cantelerai - Pac-Man</h1>
+    <button onclick="startGame()" class="big-button">▶️ Começar Jogo</button>
   </div>
 
   <div id="game-container" style="display: none;">
     <div id="timer"></div>
-    <div id="game-container" style="display: none;">
-  <div id="timer"></div>
-  <div id="game-board"></div>
-    <!-- Adicionando as imagens do Pac-Man e do Fantasma -->
-  <img id="pacman" src="assets/5a18871c8d421802430d2d05.png" alt="Pac-Man" style="position: absolute; top: 50px; left: 50px; width: 40px; height: 40px;" />
-  <img id="ghost" src="assets/pngwing.com.png" alt="Ghost" style="position: absolute; top: 350px; left: 350px; width: 40px; height: 40px;" />
-</div>
+    <canvas id="gameCanvas" width="400" height="400"></canvas>
 
+    <!-- Pac-Man e Fantasma -->
+    <img id="pacman" src="assets/5a18871c8d421802430d2d05.png" alt="Pac-Man" style="position: absolute; top: 50px; left: 50px; width: 40px; height: 40px;" />
+    <img id="ghost" src="assets/pngwing.com.png" alt="Ghost" style="position: absolute; top: 350px; left: 350px; width: 40px; height: 40px;" />
   </div>
 
+  <!-- Música de fundo -->
   <audio id="background-music" loop>
     <source src="assets/8bit Dungeon Boss.mp3" type="audio/mpeg" />
   </audio>
 
+  <!-- Som de morte -->
   <audio id="death-sound">
     <source src="assets/pixel-game-over-319170.mp3" type="audio/mpeg" />
   </audio>
