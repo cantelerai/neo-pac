@@ -2,11 +2,12 @@ const board = document.getElementById("game-board");
 const scoreText = document.getElementById("score");
 const startBtn = document.getElementById("start-btn");
 const muteBtn = document.getElementById("mute-btn");
-const menu = document.getElementById("menu");
+const welcome = document.getElementById("welcome");
+const gameArea = document.getElementById("game-area");
 const bgMusic = document.getElementById("bg-music");
 const gameOverMusic = document.getElementById("gameover-music");
 
-const size = 10;
+const size = 8;
 let score = 0;
 let level = 1;
 let playerPos = 0;
@@ -15,9 +16,8 @@ let ghostInterval;
 let isMuted = true;
 
 startBtn.addEventListener("click", () => {
-  menu.style.display = "none";
-  board.style.display = "grid";
-  scoreText.style.display = "block";
+  welcome.style.display = "none";
+  gameArea.style.display = "block";
 
   if (!isMuted) bgMusic.play();
   createBoard();
