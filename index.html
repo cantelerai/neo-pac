@@ -3,27 +3,42 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Neo Pac</title>
+  <title>Cantelerai - Pac-Man</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <h1>Neo Pac</h1>
-
-  <!-- Tela inicial -->
-  <div id="menu">
-    <button id="start-btn">Iniciar Jogo</button>
-    <button id="mute-btn">🔇 Som</button>
+  <div id="start-screen">
+    <h1>🎮 Cantelerai - Pac-Man</h1>
+    <select id="difficulty">
+      <option value="easy">Fácil</option>
+      <option value="medium">Médio</option>
+      <option value="hard">Difícil</option>
+    </select><br/>
+    <button id="sound-button" class="big-button" onclick="toggleSound()">🔊 Som</button>
+    <br>
+    <button class="big-button" onclick="startGame()">▶️ Começar Jogo</button>
   </div>
 
-  <!-- Tabuleiro -->
-  <div id="game-board" style="display: none;"></div>
-  <p id="score" style="display: none;">Pontuação: 0 | Nível: 1</p>
+  <div id="game-container" style="display: none;">
+    <div id="timer"></div>
+    <div id="game-container" style="display: none;">
+  <div id="timer"></div>
+  <div id="game-board"></div>
+    <!-- Adicionando as imagens do Pac-Man e do Fantasma -->
+  <img id="pacman" src="assets/5a18871c8d421802430d2d05.png" alt="Pac-Man" style="position: absolute; top: 50px; left: 50px; width: 40px; height: 40px;" />
+  <img id="ghost" src="assets/pngwing.com.png" alt="Ghost" style="position: absolute; top: 350px; left: 350px; width: 40px; height: 40px;" />
+</div>
 
-  <!-- Áudios -->
-  <audio id="bg-music" src="assets/action-theme.mp3" loop></audio>
-  <audio id="gameover-music" src="assets/gameover-theme.mp3"></audio>
+  </div>
+
+  <audio id="background-music" loop>
+    <source src="assets/8bit Dungeon Boss.mp3" type="audio/mpeg" />
+  </audio>
+
+  <audio id="death-sound">
+    <source src="assets/pixel-game-over-319170.mp3" type="audio/mpeg" />
+  </audio>
 
   <script src="script.js"></script>
 </body>
 </html>
-

@@ -1,144 +1,107 @@
-const board = document.getElementById("game-board");
-const scoreText = document.getElementById("score");
-const startBtn = document.getElementById("start-btn");
-const muteBtn = document.getElementById("mute-btn");
-const menu = document.getElementById("menu");
-const bgMusic = document.getElementById("bg-music");
-const gameOverMusic = document.getElementById("gameover-music");
-
-const size = 10;
-let score = 0;
-let level = 1;
+let gameStarted = false;
+let music = document.getElementById("background-music");
+let deathSound = document.getElementById("death-sound");
+let isSoundOn = true;
+let timer;
+let timeLeft;
+let level = "easy";
 let playerPos = 0;
-let ghostPos = size * size - 1;
-let ghostInterval;
-let isMuted = true;
+let ghostPos = 63;
+let cells = [];
+let playerLives = 1;
 
-startBtn.addEventListener("click", () => {
-  menu.style.display = "none";
-  board.style.display = "grid";
-  scoreText.style.display = "block";
+const ctx = document.getElementById("gameCanvas").getContext("2d");
 
-  if (!isMuted) bgMusic.play();
-  createBoard();
-});
+const pacmanImage = new Image();
+pacmanImage.src = 'assets/';  // Imagem do Pac-Man
 
-muteBtn.addEventListener("click", () => {
-  isMuted = !isMuted;
-  muteBtn.textContent = isMuted ? "🔇 Som" : "🔊 Som";
+const ghostImage = new Image();
+ghostImage.src = 'assets/ghost.png';  // Imagem do fantasma
 
-  if (isMuted) {
-    bgMusic.pause();
-    gameOverMusic.pause();
+function toggleSound() {
+  isSoundOn = !isSoundOn;
+  if (isSoundOn) {
+    music.play();
+    document.getElementById("sound-button").innerText = "🔊 Som";
   } else {
-    bgMusic.play();
+    music.pause();
+    document.getElementById("sound-button").innerText = "🔇 Som";
   }
-});
+}
 
-function createBoard() {
-  board.innerHTML = "";
-  for (let i = 0; i < size * size; i++) {
+function startGame() {
+  document.getElementById("start-screen").style.display = "none";
+  document.getElementById("game-container").style.display = "block";
+
+  level = document.getElementById("difficulty").value;
+  if (level === "easy") timeLeft = 60;
+  else if (level === "medium") timeLeft = 40;
+  else timeLeft = 25;
+
+  document.getElementById("timer").innerText = `Tempo: ${timeLeft}s`;
+  startTimer();
+  generateMap();
+  gameStarted = true;
+
+  if (isSoundOn) music.play();
+  document.addEventListener("keydown", movePlayer);
+}
+
+function startTimer() {
+  timer = setInterval(() => {
+    timeLeft--;
+    document.getElementById("timer").innerText = `Tempo: ${timeLeft}s`;
+    if (timeLeft <= 0) {
+      clearInterval(timer);
+      if (isSoundOn) deathSound.play();
+      alert("Tempo esgotado! Fim de jogo!");
+      location.reload();
+    }
+  }, 1000);
+}
+
+function generateMap() {
+  cells = [];
+  for (let i = 0; i < 64; i++) {
     const cell = document.createElement("div");
     cell.classList.add("cell");
-
-    if (i !== playerPos && i !== ghostPos && Math.random() < 0.3 + level * 0.05) {
-      cell.classList.add("food");
-    }
-
-    board.appendChild(cell);
+    if (Math.random() < 0.1) cell.classList.add("super-dot");
+    else cell.classList.add("food");
+    cells.push(cell);
   }
   updatePlayer();
   updateGhost();
-  ghostSpeedUp();
+}
+
+function drawCharacters() {
+  updatePlayer();
+  updateGhost();
 }
 
 function updatePlayer() {
-  const cells = document.querySelectorAll(".cell");
-  cells.forEach(cell => cell.classList.remove("player"));
-  cells[playerPos].classList.add("player");
-
-  if (cells[playerPos].classList.contains("food")) {
-    cells[playerPos].classList.remove("food");
-    score++;
-    updateScore();
-  }
-
-  if (playerPos === ghostPos) {
-    gameOver();
-  }
-
-  if (document.querySelectorAll(".food").length === 0) {
-    alert("Você venceu o nível " + level + "!");
-    level++;
-    ghostSpeedUp();
-    resetBoard();
-  }
+  ctx.clearRect(0, 0, 400, 400);  // Limpa o canvas a cada atualização
+  
+  // Desenha o Pac-Man usando a imagem carregada
+  ctx.drawImage(pacmanImage, 50, 50, 40, 40); // (x, y, largura, altura)
 }
 
 function updateGhost() {
-  const cells = document.querySelectorAll(".cell");
-  cells.forEach(cell => cell.classList.remove("ghost"));
-  cells[ghostPos].classList.add("ghost");
-
-  if (ghostPos === playerPos) {
-    gameOver();
-  }
+  // Desenha o Fantasma usando a imagem carregada
+  ctx.drawImage(ghostImage, 350, 350, 40, 40); // (x, y, largura, altura)
 }
 
-function moveGhost() {
-  const directions = [-1, 1, -size, size];
-  const possibleMoves = directions.filter(dir => {
-    const newPos = ghostPos + dir;
-    return newPos >= 0 &&
-      newPos < size * size &&
-      Math.abs((ghostPos % size) - (newPos % size)) <= 1;
-  });
+ function movePlayer(e) {
+  if (!gameStarted) return;
 
-  const move = possibleMoves[Math.floor(Math.random() * possibleMoves.length)];
-  ghostPos += move;
-  updateGhost();
+  let pacman = document.getElementById("pacman");
+
+  // Pega a posição atual
+  let pacmanRect = pacman.getBoundingClientRect();
+
+  let moveAmount = 5;  // Quantos pixels o Pac-Man se moverá por vez
+
+  if (e.key === "ArrowRight") pacman.style.left = `${pacmanRect.left + moveAmount}px`;
+  if (e.key === "ArrowLeft") pacman.style.left = `${pacmanRect.left - moveAmount}px`;
+  if (e.key === "ArrowUp") pacman.style.top = `${pacmanRect.top - moveAmount}px`;
+  if (e.key === "ArrowDown") pacman.style.top = `${pacmanRect.top + moveAmount}px`;
 }
-
-function updateScore() {
-  scoreText.textContent = `Pontuação: ${score} | Nível: ${level}`;
-}
-
-function ghostSpeedUp() {
-  clearInterval(ghostInterval);
-  const speed = Math.max(300, 1000 - level * 150);
-  ghostInterval = setInterval(moveGhost, speed);
-}
-
-function resetBoard() {
-  playerPos = 0;
-  ghostPos = size * size - 1;
-  createBoard();
-}
-
-function gameOver() {
-  clearInterval(ghostInterval);
-  bgMusic.pause();
-  if (!isMuted) gameOverMusic.play();
-  setTimeout(() => {
-    alert("Game Over! O fantasma pegou você!");
-    window.location.reload();
-  }, 100);
-}
-
-document.addEventListener("keydown", e => {
-  switch (e.key) {
-    case "ArrowUp":
-      if (playerPos >= size) playerPos -= size;
-      break;
-    case "ArrowDown":
-      if (playerPos < size * (size - 1)) playerPos += size;
-      break;
-    case "ArrowLeft":
-      if (playerPos % size !== 0) playerPos -= 1;
-      break;
-    case "ArrowRight":
-      if ((playerPos + 1) % size !== 0) playerPos += 1;
-      break;
-  }
-  updatePlayer();
-});
